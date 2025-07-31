@@ -139,6 +139,8 @@ public partial class Container : Item
     [SerializableFieldDefault(2)]
     private int DropSoundDefaultValue() => -1;
 
+    public bool isAwaitingGoldRefresh;
+
     [CommandProperty(AccessLevel.GameMaster)]
     public virtual int MaxWeight => Parent is Container { MaxWeight: 0 } ? 0 : DefaultMaxWeight;
 

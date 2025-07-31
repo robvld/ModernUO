@@ -97,6 +97,32 @@ namespace Server.SkillHandlers
                 {
                     var theirPack = _target.Backpack;
 
+                    // Replenish NPC gold stocks
+                    if (theirPack != null
+                        && theirPack.isAwaitingGoldRefresh == false
+                        && theirPack.GetAmount(typeof(Gold)) <= 50)
+                    {
+                        theirPack.isAwaitingGoldRefresh = true;
+
+                        Timer.DelayCall(TimeSpan.FromSeconds(3600), () =>
+                        {
+                            var amount = 50 + Utility.Random(301);
+
+                            // We are assuming the gold will always spawn in the main backpack of the NPC
+                            var goldPileArray = theirPack.FindItemByType(typeof(Gold), false);
+                            if (goldPileArray != null)
+                            {
+                                goldPileArray.Amount = amount;
+                            }
+                            else
+                            {
+                                theirPack.AddItem(new Gold(amount));
+                            }
+
+                            theirPack.isAwaitingGoldRefresh = false;
+                        });
+                    }
+
                     var badKarmaChance = 0.5 - (double)_from.Karma / 8570;
 
                     if (theirPack == null)
