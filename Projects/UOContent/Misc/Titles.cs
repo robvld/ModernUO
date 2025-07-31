@@ -277,11 +277,11 @@ namespace Server.Misc
 
             if (beheld.ShowFameTitle || beholder == beheld)
             {
-                for (var i = 0; i < m_FameEntries.Length; ++i)
+                for (var i = 0; i < fameEntries.Length; ++i)
                 {
-                    var fe = m_FameEntries[i];
+                    var fe = fameEntries[i];
 
-                    if (fame <= fe.m_Fame || i == m_FameEntries.Length - 1)
+                    if (fame <= fe.m_Fame || i == fameEntries.Length - 1)
                     {
                         var karmaEntries = fe.m_Karma;
 
@@ -400,7 +400,7 @@ namespace Server.Misc
             return highest;
         }
 
-        private static string GetSkillLevel(Skill skill) => m_Levels[GetTableIndex(skill), GetTableType(skill)];
+        private static string GetSkillLevel(Skill skill) => levels[GetTableIndex(skill), GetTableType(skill)];
 
         private static int GetTableType(Skill skill)
         {
