@@ -13,7 +13,7 @@ namespace Server.Misc
         public const int MinKarma = -15000;
         public const int MaxKarma = 15000;
 
-        private static readonly string[,] m_Levels =
+        public static readonly string[,] levels =
         {
             { "Neophyte", "Neophyte", "Neophyte" },
             { "Novice", "Novice", "Novice" },
@@ -27,7 +27,7 @@ namespace Server.Misc
             { "Legendary", "Kengo", "Ka-ge" }
         };
 
-        private static readonly FameEntry[] m_FameEntries =
+        public static readonly FameEntry[] fameEntries =
         {
             new(
                 1249,
@@ -43,7 +43,7 @@ namespace Server.Misc
                     new KarmaEntry(2499, "The Kind "),
                     new KarmaEntry(4999, "The Good "),
                     new KarmaEntry(9999, "The Honest "),
-                    new KarmaEntry(10000, "The Trustworthy ")
+                    new KarmaEntry(12999, "The Trustworthy ")
                 }
             ),
             new(
@@ -60,7 +60,7 @@ namespace Server.Misc
                     new KarmaEntry(2499, "The Respectable "),
                     new KarmaEntry(4999, "The Honorable "),
                     new KarmaEntry(9999, "The Commendable "),
-                    new KarmaEntry(10000, "The Estimable ")
+                    new KarmaEntry(12999, "The Estimable ")
                 }
             ),
             new(
@@ -77,7 +77,7 @@ namespace Server.Misc
                     new KarmaEntry(2499, "The Proper "),
                     new KarmaEntry(4999, "The Admirable "),
                     new KarmaEntry(9999, "The Famed "),
-                    new KarmaEntry(10000, "The Great ")
+                    new KarmaEntry(12999, "The Great ")
                 }
             ),
             new(
@@ -94,7 +94,7 @@ namespace Server.Misc
                     new KarmaEntry(2499, "The Eminent "),
                     new KarmaEntry(4999, "The Noble "),
                     new KarmaEntry(9999, "The Illustrious "),
-                    new KarmaEntry(10000, "The Glorious ")
+                    new KarmaEntry(12999, "The Glorious ")
                 }
             ),
             new(
@@ -111,7 +111,7 @@ namespace Server.Misc
                     new KarmaEntry(2499, "The Eminent "),
                     new KarmaEntry(4999, "The Noble "),
                     new KarmaEntry(9999, "The Illustrious "),
-                    new KarmaEntry(10000, "The Glorious ")
+                    new KarmaEntry(12999, "The Glorious ")
                 }
             )
         };
