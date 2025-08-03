@@ -1,6 +1,8 @@
 using System;
+using System.Xml.Schema;
 using Server.Items;
 using Server.Misc;
+using Server.Mobiles;
 using Server.Targeting;
 
 namespace Server.SkillHandlers
@@ -95,33 +97,30 @@ namespace Server.SkillHandlers
 
                 protected override void OnTick()
                 {
-                    var theirPack = _target.Backpack;
-
                     // Replenish NPC gold stocks
-                    if (theirPack != null
-                        && theirPack.isAwaitingGoldRefresh == false
-                        && theirPack.GetAmount(typeof(Gold)) <= 50)
+                    var baseCreatureTarget = _target as BaseCreature;
+                    if (baseCreatureTarget != null
+                        && baseCreatureTarget.Backpack != null
+                        && baseCreatureTarget.Body.IsHuman == true
+                        && Core.Now >= baseCreatureTarget.timeUntilGoldRefresh
+                        && baseCreatureTarget.Backpack.GetAmount(typeof(Gold)) <= 50)
                     {
-                        theirPack.isAwaitingGoldRefresh = true;
+                        baseCreatureTarget.timeUntilGoldRefresh = Core.Now.AddSeconds(60 * 60 * 24 * 2);
+                        var amount = 50 + Utility.Random(300);
 
-                        Timer.DelayCall(TimeSpan.FromSeconds(3600), () =>
+                        // We are assuming the gold will always spawn in the main backpack of the NPC
+                        var goldPileArray = baseCreatureTarget.Backpack.FindItemByType(typeof(Gold), false);
+                        if (goldPileArray != null)
                         {
-                            var amount = 50 + Utility.Random(301);
-
-                            // We are assuming the gold will always spawn in the main backpack of the NPC
-                            var goldPileArray = theirPack.FindItemByType(typeof(Gold), false);
-                            if (goldPileArray != null)
-                            {
-                                goldPileArray.Amount = amount;
-                            }
-                            else
-                            {
-                                theirPack.AddItem(new Gold(amount));
-                            }
-
-                            theirPack.isAwaitingGoldRefresh = false;
-                        });
+                            goldPileArray.Amount = amount;
+                        }
+                        else
+                        {
+                            baseCreatureTarget.Backpack.AddItem(new Gold(amount));
+                        }
                     }
+
+                    var theirPack = _target.Backpack;
 
                     var badKarmaChance = 0.5 - (double)_from.Karma / 8570;
 

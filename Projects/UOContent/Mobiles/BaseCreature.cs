@@ -170,6 +170,8 @@ namespace Server.Mobiles
 
         public const int ShoutRange = 8;
 
+        public DateTime timeUntilGoldRefresh;
+
         private static readonly Type[] m_AnimateDeadTypes =
         {
             typeof(MoundOfMaggots), typeof(HellSteed), typeof(SkeletalMount),

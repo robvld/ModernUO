@@ -79,6 +79,32 @@ public static class Snooping
             }
 
             Titles.AwardKarma(from, -4, true);
+
+            // Replenish NPC gold stocks
+            if (from != null)
+            {
+                var baseCreatureTarget = root as BaseCreature;
+                if (baseCreatureTarget != null
+                    && baseCreatureTarget.Backpack != null
+                    && baseCreatureTarget.Body.IsHuman == true
+                    && Core.Now >= baseCreatureTarget.timeUntilGoldRefresh
+                    && baseCreatureTarget.Backpack.GetAmount(typeof(Gold)) <= 50)
+                {
+                    baseCreatureTarget.timeUntilGoldRefresh = Core.Now.AddSeconds(60 * 60 * 24 * 2);
+                    var amount = 50 + Utility.Random(300);
+
+                    // We are assuming the gold will always spawn in the main backpack of the NPC
+                    var goldPileArray = baseCreatureTarget.Backpack.FindItemByType(typeof(Gold), false);
+                    if (goldPileArray != null)
+                    {
+                        goldPileArray.Amount = amount;
+                    }
+                    else
+                    {
+                        baseCreatureTarget.Backpack.AddItem(new Gold(amount));
+                    }
+                }
+            }
         }
 
         if (from.AccessLevel > AccessLevel.Player || from.CheckTargetSkill(SkillName.Snooping, cont, 0.0, 100.0))
