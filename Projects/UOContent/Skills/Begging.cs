@@ -1,5 +1,4 @@
 using System;
-using System.Xml.Schema;
 using Server.Items;
 using Server.Misc;
 using Server.Mobiles;
@@ -101,22 +100,25 @@ namespace Server.SkillHandlers
                     var baseCreatureTarget = _target as BaseCreature;
                     if (baseCreatureTarget != null
                         && baseCreatureTarget.Backpack != null
-                        && baseCreatureTarget.Body.IsHuman == true
-                        && Core.Now >= baseCreatureTarget.timeUntilGoldRefresh
-                        && baseCreatureTarget.Backpack.GetAmount(typeof(Gold)) <= 50)
+                        && baseCreatureTarget.Body.IsHuman == true)
                     {
-                        baseCreatureTarget.timeUntilGoldRefresh = Core.Now.AddSeconds(60 * 60 * 24 * 2);
-                        var amount = 50 + Utility.Random(300);
+                        var goldStockReplenishTime = baseCreatureTarget.GetGoldStockReplenishTime(baseCreatureTarget.Serial);
+                        if (Core.Now >= goldStockReplenishTime)
+                        {
+                            baseCreatureTarget.AddGoldStockReplenishTime(baseCreatureTarget.Serial
+                                                                        , Core.Now.AddSeconds(60 * 60 * 24 * 2));
+                            var amount = 50 + Utility.Random(300);
 
-                        // We are assuming the gold will always spawn in the main backpack of the NPC
-                        var goldPileArray = baseCreatureTarget.Backpack.FindItemByType(typeof(Gold), false);
-                        if (goldPileArray != null)
-                        {
-                            goldPileArray.Amount = amount;
-                        }
-                        else
-                        {
-                            baseCreatureTarget.Backpack.AddItem(new Gold(amount));
+                            // We are assuming the gold will always spawn in the main backpack of the NPC
+                            var goldPileArray = baseCreatureTarget.Backpack.FindItemByType(typeof(Gold), false);
+                            if (goldPileArray != null)
+                            {
+                                goldPileArray.Amount = amount;
+                            }
+                            else
+                            {
+                                baseCreatureTarget.Backpack.AddItem(new Gold(amount));
+                            }
                         }
                     }
 

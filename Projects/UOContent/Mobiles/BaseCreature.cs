@@ -172,6 +172,31 @@ namespace Server.Mobiles
 
         public DateTime timeUntilGoldRefresh;
 
+        private static readonly Dictionary<Serial, DateTime> m_goldstockReplenishTimeDict = new();
+
+        public void AddGoldStockReplenishTime(Serial serial, DateTime replenishTime) =>
+            m_goldstockReplenishTimeDict[serial] = replenishTime;
+
+        public DateTime GetGoldStockReplenishTime(Serial serial) =>
+            m_goldstockReplenishTimeDict.TryGetValue(serial, out var time) ? time : DateTime.MinValue;
+
+        public void RemoveGoldStockReplenishTime(Serial serial)
+        {
+            var keysToRemove = new List<Serial>();
+            foreach (var entry in m_goldstockReplenishTimeDict)
+            {
+                if (Core.Now > entry.Value)
+                {
+                    keysToRemove.Add(entry.Key);
+                }
+            }
+
+            foreach (var key in keysToRemove)
+            {
+                m_goldstockReplenishTimeDict.Remove(key);
+            }
+        }
+
         private static readonly Type[] m_AnimateDeadTypes =
         {
             typeof(MoundOfMaggots), typeof(HellSteed), typeof(SkeletalMount),
@@ -3421,6 +3446,11 @@ namespace Server.Mobiles
 
         public override void OnDelete()
         {
+            if (Body.IsHuman == true)
+            {
+                RemoveGoldStockReplenishTime(Serial);
+            }
+
             CreatureDeletedEvent(this);
 
             var m = m_ControlMaster;

@@ -81,16 +81,16 @@ public static class Snooping
             Titles.AwardKarma(from, -4, true);
 
             // Replenish NPC gold stocks
-            if (from != null)
+            var baseCreatureTarget = from as BaseCreature;
+            if (baseCreatureTarget != null
+                && baseCreatureTarget.Backpack != null
+                && baseCreatureTarget.Body.IsHuman == true)
             {
-                var baseCreatureTarget = root as BaseCreature;
-                if (baseCreatureTarget != null
-                    && baseCreatureTarget.Backpack != null
-                    && baseCreatureTarget.Body.IsHuman == true
-                    && Core.Now >= baseCreatureTarget.timeUntilGoldRefresh
-                    && baseCreatureTarget.Backpack.GetAmount(typeof(Gold)) <= 50)
+                var goldStockReplenishTime = baseCreatureTarget.GetGoldStockReplenishTime(baseCreatureTarget.Serial);
+                if (Core.Now >= goldStockReplenishTime)
                 {
-                    baseCreatureTarget.timeUntilGoldRefresh = Core.Now.AddSeconds(60 * 60 * 24 * 2);
+                    baseCreatureTarget.AddGoldStockReplenishTime(baseCreatureTarget.Serial
+                                                                , Core.Now.AddSeconds(60 * 60 * 24 * 2));
                     var amount = 50 + Utility.Random(300);
 
                     // We are assuming the gold will always spawn in the main backpack of the NPC
